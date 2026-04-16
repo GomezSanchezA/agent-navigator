@@ -1,0 +1,62 @@
+{
+  "id": "demo-form",
+  "name": "Demo local form",
+  "description": "Perfil para el formulario local de prueba.",
+  "urlIncludes": [
+    "demo-form.html"
+  ],
+  "stepDelayMs": 200,
+  "postClickDelayMs": 250,
+  "steps": [
+    {
+      "type": "clickText",
+      "texts": [
+        "Alta elemento patrimonial"
+      ],
+      "optional": true
+    },
+    {
+      "type": "fillByLabel",
+      "labels": [
+        "Descripcion"
+      ],
+      "field": "description"
+    },
+    {
+      "type": "fillByLabel",
+      "labels": [
+        "Fecha de adquisicion"
+      ],
+      "field": "buy_date"
+    },
+    {
+      "type": "fillByLabel",
+      "labels": [
+        "Fecha de transmision"
+      ],
+      "field": "sell_date"
+    },
+    {
+      "type": "fillByLabel",
+      "labels": [
+        "Valor de adquisicion"
+      ],
+      "field": "acquisition_value"
+    },
+    {
+      "type": "fillByLabel",
+      "labels": [
+        "Valor de transmision"
+      ],
+      "field": "transmission_value"
+    },
+    {
+      "type": "fillByLabel",
+      "labels": [
+        "Gastos"
+      ],
+      "field": "fees",
+      "optional": true
+    }
+  ]
+}

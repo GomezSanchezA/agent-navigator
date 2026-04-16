@@ -1,0 +1,4 @@
+.brave-debug/
+automation-profile/
+*.log
+*.tmp

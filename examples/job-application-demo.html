@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Job Application Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f2efe8;
+        --panel: #fffdf7;
+        --line: #d8d1c2;
+        --text: #2c261f;
+        --muted: #70665a;
+        --accent: #155e75;
+        --accent-2: #0f766e;
+      }
+
+      body {
+        margin: 0;
+        font: 16px/1.4 "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(21, 94, 117, 0.12), transparent 38%),
+          linear-gradient(180deg, #f7f5ef 0%, var(--bg) 100%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 820px;
+        margin: 40px auto;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(44, 38, 31, 0.08);
+      }
+
+      .intro {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(21, 94, 117, 0.1);
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      form {
+        display: grid;
+        gap: 16px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      input,
+      textarea {
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: white;
+        font: inherit;
+        color: var(--text);
+      }
+
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .primary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .secondary {
+        background: var(--accent-2);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="intro">
+        <div>
+          <div class="badge">Talent Demo</div>
+          <h1>Frontend Engineer</h1>
+          <p>Simple application form to test multipurpose browser automation on a non-tax flow.</p>
+        </div>
+        <button class="secondary" type="button">Apply now</button>
+      </div>
+
+      <form>
+        <div class="grid">
+          <label>
+            <span>Full name</span>
+            <input type="text" name="full_name">
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email">
+          </label>
+          <label>
+            <span>Phone</span>
+            <input type="tel" name="phone">
+          </label>
+          <label>
+            <span>Location</span>
+            <input type="text" name="location">
+          </label>
+          <label>
+            <span>LinkedIn</span>
+            <input type="url" name="linkedin">
+          </label>
+          <label>
+            <span>Portfolio</span>
+            <input type="url" name="portfolio">
+          </label>
+          <label>
+            <span>GitHub</span>
+            <input type="url" name="github">
+          </label>
+          <label>
+            <span>Current role</span>
+            <input type="text" name="role">
+          </label>
+        </div>
+        <label>
+          <span>Cover letter</span>
+          <textarea name="message"></textarea>
+        </label>
+        <div class="actions">
+          <button class="primary" type="button" onclick="alert('Application sent in demo mode')">Send application</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

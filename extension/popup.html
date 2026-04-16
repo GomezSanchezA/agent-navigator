@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Browser Agent</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <h1>Browser Agent</h1>
+        <button id="openOptions" class="ghost">Profiles</button>
+      </header>
+
+      <section class="panel">
+        <label class="fileLabel">
+          <span>Importar JSON, TXT o CSV</span>
+          <input id="fileInput" type="file" accept=".json,.txt,.csv,.tsv,.log">
+        </label>
+        <textarea id="pasteInput" rows="6" placeholder="Pega aqui registros: candidatos, operaciones, leads o cualquier tabla de datos"></textarea>
+        <div class="row">
+          <button id="importText">Importar</button>
+          <button id="readWeb" class="secondary">Leer Web</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="stats">
+          <div>
+            <strong id="countValue">0</strong>
+            <span>registros</span>
+          </div>
+          <div>
+            <strong id="indexValue">0</strong>
+            <span>indice</span>
+          </div>
+        </div>
+        <p class="metaLine">Perfil activo: <strong id="activeProfileValue">Generic visible form</strong></p>
+        <pre id="currentRecord" class="viewer">Sin registros cargados.</pre>
+        <div class="row">
+          <button id="prevRecord" class="secondary">Anterior</button>
+          <button id="nextRecord" class="secondary">Siguiente</button>
+        </div>
+        <div class="row">
+          <button id="runCurrent">Ejecutar Actual</button>
+          <button id="runRemaining" class="danger">Ejecutar Restantes</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Lectura de la Web</h2>
+        <pre id="snapshotView" class="viewer small">Sin lectura todavia.</pre>
+      </section>
+
+      <section class="panel">
+        <h2>Estado</h2>
+        <pre id="statusView" class="viewer small">Listo.</pre>
+      </section>
+    </main>
+
+    <script src="shared/operation-parser.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

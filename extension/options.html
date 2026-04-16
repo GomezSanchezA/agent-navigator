@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Browser Agent Profiles</title>
+    <link rel="stylesheet" href="popup.css">
+    <style>
+      body {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      textarea {
+        min-height: 520px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel">
+        <h1>Perfiles</h1>
+        <p>Selecciona un perfil base, actívalo y edita su JSON para adaptarlo a cualquier flujo web: impuestos, candidaturas, CRMs o demos de juego.</p>
+        <label class="fileLabel">
+          <span>Perfil activo</span>
+          <select id="profileSelect"></select>
+        </label>
+        <textarea id="profileEditor"></textarea>
+        <div class="row">
+          <button id="saveProfile">Guardar Perfil</button>
+          <button id="resetProfile" class="secondary">Restaurar Base</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Estado</h2>
+        <pre id="statusView" class="viewer small">Listo.</pre>
+      </section>
+    </main>
+
+    <script src="shared/profile-defaults.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

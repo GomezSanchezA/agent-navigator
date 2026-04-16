@@ -1,0 +1,16 @@
+[
+  {
+    "full_name": "Demo Candidate",
+    "first_name": "Demo",
+    "last_name": "Candidate",
+    "email": "candidate@example.com",
+    "phone": "+00 000 000 000",
+    "location": "Example City",
+    "role": "Frontend Engineer",
+    "linkedin": "https://www.linkedin.com/in/example-candidate",
+    "portfolio": "https://example.com/portfolio",
+    "github": "https://github.com/example-candidate",
+    "message": "This is sample data for testing browser automation flows.",
+    "cv_url": "https://example.com/cv.pdf"
+  }
+]

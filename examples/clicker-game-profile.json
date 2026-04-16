@@ -1,0 +1,47 @@
+{
+  "id": "clicker-game-demo",
+  "name": "Clicker game demo",
+  "description": "Perfil ludico para demostrar clicks, repeticiones y esperas.",
+  "urlIncludes": [
+    "clicker-game-demo.html"
+  ],
+  "stepDelayMs": 120,
+  "postClickDelayMs": 120,
+  "steps": [
+    {
+      "type": "waitForText",
+      "texts": [
+        "Mini Clicker Arena",
+        "Start game"
+      ],
+      "timeoutMs": 3000
+    },
+    {
+      "type": "clickText",
+      "texts": [
+        "Start game",
+        "Empezar partida"
+      ],
+      "optional": true
+    },
+    {
+      "type": "repeat",
+      "count": 10,
+      "steps": [
+        {
+          "type": "clickText",
+          "texts": [
+            "Collect coin",
+            "Recolectar moneda"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "showNotice",
+      "title": "Juego automatizado",
+      "message": "La partida de {title} ha terminado.",
+      "tone": "info"
+    }
+  ]
+}
