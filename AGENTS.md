@@ -5,6 +5,7 @@
 - Keep a lightweight working memory inside the repo for non-trivial tasks.
 - Use [notes/session-memory.md](notes/session-memory.md) as the default scratchpad unless the task clearly deserves its own note.
 - Update that note as you work so another model or person can continue without re-discovering everything.
+- When interacting with live websites, take frequent screenshots and read the real on-screen state carefully before and after every important action.
 
 ## What To Record
 
