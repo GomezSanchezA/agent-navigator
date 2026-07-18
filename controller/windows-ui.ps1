@@ -145,7 +145,8 @@ function Activate-WindowHandle {
   )
 
   $pointer = [IntPtr]::new($Handle)
-  [void][WinApi]::ShowWindowAsync($pointer, 5)
+  # SW_RESTORE (9) also restores minimized windows before foregrounding them.
+  [void][WinApi]::ShowWindowAsync($pointer, 9)
   Start-Sleep -Milliseconds 120
   [void][WinApi]::SetForegroundWindow($pointer)
   Start-Sleep -Milliseconds 180
