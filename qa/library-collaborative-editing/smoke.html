@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agent Navigator Library QA smoke page</title>
+    <style>
+      body { font: 16px/1.5 system-ui, sans-serif; margin: 3rem; max-width: 42rem; }
+      label, button, output { display: block; margin-top: 1rem; }
+      input, button { font: inherit; padding: 0.55rem 0.75rem; }
+      #cookie-test { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; background: rgb(0 0 0 / 20%); }
+      #cookie-test > div { border-radius: 0.75rem; background: white; padding: 1rem; box-shadow: 0 1rem 3rem rgb(0 0 0 / 25%); }
+    </style>
+  </head>
+  <body>
+    <h1>Agent Navigator preflight</h1>
+    <label for="message">QA message</label>
+    <input id="message" name="message" autocomplete="off">
+    <button id="copy" type="button">Copy message</button>
+    <button id="keyboard-copy" type="button">Copy message with Enter</button>
+    <button id="delayed-action" type="button" hidden>Delayed selector action</button>
+    <output id="result" aria-live="polite">Waiting</output>
+    <script>
+      const message = document.querySelector('#message');
+      const result = document.querySelector('#result');
+      document.querySelector('#copy').addEventListener('click', () => {
+        result.textContent = message.value;
+      });
+      document.querySelector('#keyboard-copy').addEventListener('click', () => {
+        result.textContent = message.value;
+        window.setTimeout(() => {
+          document.querySelector('#delayed-action').hidden = false;
+        }, 250);
+      });
+      document.querySelector('#delayed-action').addEventListener('click', () => {
+        result.textContent = 'selector-ok';
+        const banner = document.createElement('div');
+        banner.id = 'cookie-test';
+        banner.innerHTML = '<div><p>Optional analytics test</p><button type="button"><span>Decline</span></button></div>';
+        banner.querySelector('button').addEventListener('click', () => banner.remove());
+        document.body.appendChild(banner);
+      });
+    </script>
+  </body>
+</html>
