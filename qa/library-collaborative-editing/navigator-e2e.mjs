@@ -2752,6 +2752,35 @@ async function runMobile(context, flags) {
         'Mobile Admin check did not reach the selected QA proposal.',
         30_000,
       );
+      const adminMobile = await evaluate(connection, `(() => {
+        const menu = document.querySelector('details[data-admin-mobile-navigation]');
+        const desktopAside = document.querySelector('aside');
+        const main = document.querySelector('main');
+        const viewport = document.querySelector('meta[name="viewport"]')?.getAttribute('content') || '';
+        return {
+          menuPresent: Boolean(menu),
+          menuOpen: Boolean(menu?.open),
+          desktopAsideDisplay: desktopAside ? getComputedStyle(desktopAside).display : null,
+          mainTop: main?.getBoundingClientRect().top ?? null,
+          viewport,
+        };
+      })()`);
+      assert(adminMobile.menuPresent && !adminMobile.menuOpen, `Mobile Admin navigation is not compact by default: ${JSON.stringify(adminMobile)}`);
+      assert(adminMobile.desktopAsideDisplay === 'none', `Desktop Admin sidebar remains visible on mobile: ${JSON.stringify(adminMobile)}`);
+      assert(!/maximum-scale\s*=\s*1|user-scalable\s*=\s*(?:no|0)/i.test(adminMobile.viewport), `Mobile Admin disables browser zoom: ${adminMobile.viewport}`);
+      await strictClickText(connection, 'Menu');
+      const openMenu = await evaluate(connection, `(() => {
+        const menu = document.querySelector('details[data-admin-mobile-navigation]');
+        const links = Array.from(menu?.querySelectorAll('a') || []).filter((link) => {
+          const style = getComputedStyle(link);
+          const rect = link.getBoundingClientRect();
+          return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+        });
+        return { open: Boolean(menu?.open), targets: links.map((link) => link.getBoundingClientRect().height) };
+      })()`);
+      assert(openMenu.open && openMenu.targets.length > 0, 'Mobile Admin menu did not open.');
+      assert(openMenu.targets.every((height) => height >= 44), `Mobile Admin menu has undersized touch targets: ${JSON.stringify(openMenu.targets)}`);
+      await strictClickText(connection, 'Menu');
     } else {
       await waitUntil(
         connection,
@@ -2759,6 +2788,55 @@ async function runMobile(context, flags) {
         'Mobile Library check did not render the canary article.',
         30_000,
       );
+      await openEditor(connection, context);
+      const compactPanel = await evaluate(connection, `(() => {
+        const panel = document.querySelector('[data-ls-edit-session-panel]');
+        const toggle = Array.from(document.querySelectorAll('button')).find((button) => (button.textContent || '').trim() === 'Show controls');
+        const trigger = document.querySelector('button[data-ls-edit-trigger]');
+        const panelRect = panel?.getBoundingClientRect();
+        const triggerRect = trigger?.getBoundingClientRect();
+        return {
+          viewportHeight: innerHeight,
+          panelHeight: panelRect?.height ?? null,
+          panelTop: panelRect?.top ?? null,
+          panelOverflowY: panel ? getComputedStyle(panel).overflowY : null,
+          toggleVisible: Boolean(toggle && toggle.getBoundingClientRect().height > 0),
+          triggerHeight: triggerRect?.height ?? null,
+          triggerWidth: triggerRect?.width ?? null,
+        };
+      })()`);
+      assert(compactPanel.toggleVisible, `Mobile Library editing controls are not compact by default: ${JSON.stringify(compactPanel)}`);
+      assert(compactPanel.panelTop >= 0 && compactPanel.panelHeight <= compactPanel.viewportHeight - 16, `Mobile Library panel exceeds the viewport: ${JSON.stringify(compactPanel)}`);
+      assert(compactPanel.panelOverflowY === 'auto', `Mobile Library panel cannot scroll when constrained: ${JSON.stringify(compactPanel)}`);
+      assert(compactPanel.triggerHeight >= 44 && compactPanel.triggerWidth >= 44, `Mobile Library edit trigger is too small: ${JSON.stringify(compactPanel)}`);
+      await strictClickText(connection, 'Show controls');
+      await waitUntil(connection, `Array.from(document.querySelectorAll('button')).some((button) => (button.textContent || '').trim() === 'Hide controls')`, 'Mobile Library controls did not expand.');
+      await strictClickText(connection, 'Hide controls');
+      await waitUntil(connection, `Array.from(document.querySelectorAll('button')).some((button) => (button.textContent || '').trim() === 'Show controls')`, 'Mobile Library controls did not collapse again.');
+      const blockId = await evaluate(connection, `document.querySelector('button[data-ls-edit-trigger]')?.dataset?.lsEditTrigger || null`);
+      assert(blockId && BLOCK_ID_PATTERN.test(blockId), 'Mobile Library has no valid editable block trigger.');
+      await strictClickSelector(connection, `button[data-ls-edit-trigger=${js(blockId)}]`);
+      await waitUntil(connection, `Boolean(document.querySelector('#library-block-editor-title'))`, 'Mobile paragraph editor did not open.');
+      const drawer = await evaluate(connection, `(() => {
+        const dialog = document.querySelector('[role="dialog"][aria-labelledby="library-block-editor-title"]');
+        const rect = dialog?.getBoundingClientRect();
+        const buttons = Array.from(dialog?.querySelectorAll('button') || []).map((button) => button.getBoundingClientRect().height);
+        const textarea = document.querySelector('#library-proposed-content');
+        textarea?.focus();
+        return {
+          viewportHeight: innerHeight,
+          viewportWidth: innerWidth,
+          top: rect?.top ?? null,
+          bottom: rect?.bottom ?? null,
+          width: rect?.width ?? null,
+          buttons,
+          textareaFocused: document.activeElement === textarea,
+        };
+      })()`);
+      assert(drawer.top >= 0 && drawer.bottom <= drawer.viewportHeight + 1 && drawer.width <= drawer.viewportWidth + 1, `Mobile paragraph editor exceeds the viewport: ${JSON.stringify(drawer)}`);
+      assert(drawer.buttons.length > 0 && drawer.buttons.every((height) => height >= 44), `Mobile paragraph editor has undersized buttons: ${JSON.stringify(drawer.buttons)}`);
+      assert(drawer.textareaFocused, 'Mobile paragraph editor did not preserve textarea focus.');
+      await pressKey(connection, 'Escape');
     }
     const layout = await evaluate(connection, `({ innerWidth, scrollWidth: document.documentElement.scrollWidth, bodyWidth: document.body.scrollWidth, hasSrcdoc: Boolean(document.querySelector('iframe[srcdoc]')) })`);
     assert(layout.scrollWidth <= layout.innerWidth + 2 && layout.bodyWidth <= layout.innerWidth + 2, `Mobile page overflows horizontally: ${JSON.stringify(layout)}`);
