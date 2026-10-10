@@ -1,0 +1,46 @@
+#!/bin/sh
+# Privacy guard for this public repository.
+# Enable once per clone:  git config core.hooksPath .githooks
+#
+# Refuses a commit that stages a browser profile, a screenshot, a private note,
+# an env file or a network capture, or whose added lines look like a secret
+# (JWT, Supabase/Stripe/OpenAI/GitHub keys, session cookies, private keys).
+# A real false positive can be committed with `git commit --no-verify`, after reading it.
+
+fail=0
+
+paths=$(git diff --cached --name-only --diff-filter=ACMR)
+bad_paths=$(printf '%s\n' "$paths" | grep -E -i \
+  '(^|/)automation-profile|(^|/)\.brave-debug/|(^|/)notes/private/|\.(png|jpe?g|webp|gif|bmp|har|cookies|sqlite|ldb)$|(^|/)\.env($|\.)|(^|/)(Cookies|Login Data|Local State|Web Data)$' \
+  | grep -v -E '^\.env\.example$')
+if [ -n "$bad_paths" ]; then
+  echo "privacy guard: these files must not go into the public repo:" >&2
+  printf '  %s\n' $bad_paths >&2
+  fail=1
+fi
+
+secrets=$(git diff --cached -U0 --diff-filter=ACMR -- . ':(exclude).githooks/pre-commit' \
+  | grep -E '^\+[^+]' \
+  | grep -E -n \
+  'eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}|sbp_[A-Za-z0-9]{20,}|sb_(secret|publishable)_[A-Za-z0-9_-]{10,}|sk_(live|test)_[A-Za-z0-9]{10,}|rk_live_[A-Za-z0-9]{10,}|whsec_[A-Za-z0-9]{10,}|sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|sb-[a-z0-9]{20}-auth-token[^"`]*=|(password|passwd|secret|api_?key|access_?token)["'"'"' ]*[:=] *["'"'"'][^"'"'"' ]{8,}' \
+  | cut -c1-160)
+if [ -n "$secrets" ]; then
+  echo "privacy guard: staged lines that look like secrets or session data:" >&2
+  printf '%s\n' "$secrets" >&2
+  fail=1
+fi
+
+big=$(git diff --cached --name-only --diff-filter=ACMR | while read -r f; do
+  [ -f "$f" ] && [ "$(wc -c < "$f")" -gt 2000000 ] && echo "$f"
+done)
+if [ -n "$big" ]; then
+  echo "privacy guard: files over 2 MB (profiles, dumps?):" >&2
+  printf '  %s\n' $big >&2
+  fail=1
+fi
+
+if [ "$fail" -ne 0 ]; then
+  echo "Commit refused. Unstage with: git restore --staged <file>" >&2
+  exit 1
+fi
+exit 0

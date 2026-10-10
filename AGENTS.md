@@ -37,5 +37,6 @@
 
 - Never commit browser profiles, cookies, tokens, `.env` files, HAR captures or screenshots of real dashboards, accounts or inboxes. `.gitignore` already excludes `automation-profile*/`, `notes/*.png` and `notes/private/`.
 - `notes/session-memory.md` is a shareable template: keep only generic milestones there. Notes about a real account or project (project ids, emails, user data, what a dashboard showed) go in `notes/private/`, which is ignored.
+- Enable the privacy guard once per clone: `git config core.hooksPath .githooks`. It refuses commits with profiles, screenshots, private notes, env files or anything that looks like a key or session cookie.
 - Before `git add`, run `git status` and read the list; never use `git add -A` blindly in this repo.
 
