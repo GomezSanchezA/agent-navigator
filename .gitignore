@@ -2,3 +2,21 @@
 automation-profile/
 *.log
 *.tmp
+
+# Privacy: this repo is public.
+# Browser profiles keep logged-in sessions (cookies, tokens) of the sites the agent drives.
+automation-profile*/
+.brave-debug/
+# Screenshots of real dashboards and accounts, and the notes written about them.
+notes/*.png
+notes/*.jpg
+notes/*.jpeg
+notes/*.webp
+notes/private/
+# Anything an agent downloads or records while driving a real site.
+downloads/
+*.har
+*.cookies
+.env
+.env.*
+
